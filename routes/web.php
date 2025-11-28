@@ -20,3 +20,10 @@ Route::post('/login', [CustomerAuthController::class, 'loginSubmit'])->name('log
 Route::get('/home', function () {
     return view('home');
 })->name('home');
+
+// Admin dashboard (protected by middleware)
+Route::middleware('admin')->group(function () {
+    Route::get('/admin/dashboard', function () {
+        return view('admin.dashboard');
+    })->name('admin.dashboard');
+});

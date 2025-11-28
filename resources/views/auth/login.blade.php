@@ -6,25 +6,25 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            background-color: #e0f7f1; 
+            background-color: #e0f7f1;
             font-family: 'Segoe UI', sans-serif;
         }
 
         .card {
-            background-color: #f0fcfa; 
+            background-color: #f0fcfa;
             border-radius: 15px;
             border: none;
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
         }
 
         h2 {
-            color: #2ca58d; 
+            color: #2ca58d;
         }
 
         .form-control {
             border-radius: 10px;
-            border: 1px solid #a0e5d8; 
-            background-color: #e0faf4; 
+            border: 1px solid #a0e5d8;
+            background-color: #e0faf4;
         }
 
         .form-control:focus {
@@ -33,13 +33,13 @@
         }
 
         .btn-dark {
-            background-color: #4fd1c5; 
+            background-color: #4fd1c5;
             border: none;
             border-radius: 10px;
         }
 
         .btn-dark:hover {
-            background-color: #38b59f; 
+            background-color: #38b59f;
         }
 
         a {
@@ -59,6 +59,14 @@
 
         <form action="{{ route('login.submit') }}" method="POST" class="card p-4 mx-auto" style="max-width: 400px;">
             @csrf
+
+            @if (session('success'))
+                <div class="alert alert-success text-center">{{ session('success') }}</div>
+            @endif
+
+            @if (session('error'))
+                <div class="alert alert-danger text-center">{{ session('error') }}</div>
+            @endif
             <div class="mb-3">
                 <label class="form-label">Email Address</label>
                 <input type="email" name="email" class="form-control"  required>

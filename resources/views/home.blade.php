@@ -10,6 +10,10 @@
         <h1 class="text-success">Welcome to SoulSkin!</h1>
         <p class="mt-3">Hello, {{ session('customer_name') ?? 'Guest' }}</p>
 
+        @if (session('is_admin'))
+            <a href="{{ route('admin.dashboard') }}" class="btn btn-success mt-3 me-2">Admin dashboard</a>
+        @endif
+
         <a href="{{ route('login') }}" class="btn btn-outline-success mt-4">Logout</a>
     </div>
 </body>
