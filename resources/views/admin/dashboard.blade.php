@@ -6,18 +6,18 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            background-color: #e6f5f1; /* Soft pastel background */
-            color: #2c7a7b; /* Teal-ish text */
+            background-color: #e6f5f1; 
+            color: #2c7a7b; /
             font-family: 'Segoe UI', sans-serif;
         }
         .card {
-            background-color: #ffffff; /* White card */
-            color: #2c7a7b; /* Card text */
+            background-color: #ffffff; 
+            color: #2c7a7b; 
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
         .btn-custom {
-            background-color: #4fc1b8; /* Teal button */
+            background-color: #4fc1b8; 
             color: #fff;
             border: none;
             border-radius: 8px;
