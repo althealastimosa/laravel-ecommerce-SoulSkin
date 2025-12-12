@@ -8,9 +8,7 @@ use Illuminate\Http\Request;
 
 class EnsureUserIsAdmin
 {
-    /**
-     * Validate that the current session belongs to an admin customer.
-     */
+   
     public function handle(Request $request, Closure $next)
     {
         $customerId = session('customer_id');

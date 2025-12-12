@@ -8,17 +8,13 @@ use Illuminate\Support\Facades\Hash;
 
 class CustomerAuthController extends Controller
 {
-    /**
-     * Show the registration form
-     */
+    
     public function showRegister()
     {
         return view('auth.register');
     }
 
-    /**
-     * Handle registration form submission
-     */
+  
     public function registerSubmit(Request $request)
     {
 
@@ -45,17 +41,13 @@ class CustomerAuthController extends Controller
         return redirect()->route('login')->with('success', $message);
     }
 
-    /**
-     * Show the login form
-     */
+    
     public function showLogin()
     {
         return view('auth.login');
     }
 
-    /**
-     * Handle login form submission
-     */
+    
     public function loginSubmit(Request $request)
     {
 
