@@ -8,7 +8,6 @@ DROP TABLE IF EXISTS `carts`;
 DROP TABLE IF EXISTS `products`;
 DROP TABLE IF EXISTS `customers`;
 
--- 1. Customers Table
 CREATE TABLE `customers` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255) NOT NULL,
@@ -21,7 +20,6 @@ CREATE TABLE `customers` (
   UNIQUE KEY `customers_email_unique` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- 2. Products Table
 CREATE TABLE `products` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255) NOT NULL,
@@ -34,7 +32,6 @@ CREATE TABLE `products` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- 3. Carts Table
 CREATE TABLE `carts` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `customer_id` BIGINT UNSIGNED NOT NULL,
@@ -49,7 +46,7 @@ CREATE TABLE `carts` (
   CONSTRAINT `carts_product_id_foreign` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- 4. Orders Table
+
 CREATE TABLE `orders` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `customer_id` BIGINT UNSIGNED NOT NULL,
@@ -67,7 +64,6 @@ CREATE TABLE `orders` (
   CONSTRAINT `orders_customer_id_foreign` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- 5. Order Items Table
 CREATE TABLE `order_items` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `order_id` BIGINT UNSIGNED NOT NULL,
@@ -84,8 +80,6 @@ CREATE TABLE `order_items` (
   CONSTRAINT `order_items_product_id_foreign` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Sample Admin User (password: admin123 - you should change this!)
--- Password is hashed using bcrypt: $2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi
 INSERT INTO `customers` (`name`, `email`, `password`, `is_admin`, `created_at`, `updated_at`) 
 VALUES ('Admin User', 'admin@soulskin.com', 'admingihapon', 1, NOW(), NOW());
 

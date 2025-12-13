@@ -29,7 +29,7 @@ class CustomerAuthController extends Controller
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
-            'is_admin' => false, // All registrations are customers by default
+            'is_admin' => false, 
         ]);
 
        
@@ -65,7 +65,7 @@ class CustomerAuthController extends Controller
                 'is_admin' => $isAdmin,
             ]);
 
-            // Redirect admins to admin dashboard, regular customers to home
+            
             if ($isAdmin) {
                 return redirect()->route('admin.dashboard')->with('success', 'Welcome back, ' . $customer->name . '!');
             }
@@ -81,7 +81,7 @@ class CustomerAuthController extends Controller
      */
     public function logout(Request $request)
     {
-        $request->session()->flush(); // Clear all session data
+        $request->session()->flush(); 
         return redirect()->route('login')->with('success', 'Logged out successfully.');
     }
 }

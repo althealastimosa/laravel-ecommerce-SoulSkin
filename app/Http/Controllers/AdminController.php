@@ -11,13 +11,12 @@ class AdminController extends Controller
 {
     public function index()
     {
-        // Get statistics
+    
         $totalProducts = Product::count();
         $totalOrders = Order::count();
         $totalCustomers = Customer::count();
         $totalRevenue = Order::where('status', '!=', 'cancelled')->sum('total_amount');
         
-        // Get recent orders (last 5)
         $recentOrders = Order::with('customer')
             ->latest()
             ->take(5)
