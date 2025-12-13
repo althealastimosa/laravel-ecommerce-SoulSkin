@@ -37,7 +37,17 @@ class CartController extends Controller
                 ->with('error', 'Please login to add items to cart.');
         }
 
-        $quantity = $request->input('quantity', 1);
+        // Check if product is in stock
+        if ($product->stock <= 0) {
+            return redirect()->back()
+                ->with('error', 'This product is out of stock.');
+        }
+
+        $validated = $request->validate([
+            'quantity' => 'required|integer|min:1|max:' . $product->stock,
+        ]);
+
+        $quantity = $validated['quantity'];
 
         // Check if item already in cart
         $cartItem = Cart::where('customer_id', $customerId)
@@ -45,7 +55,13 @@ class CartController extends Controller
             ->first();
 
         if ($cartItem) {
-            $cartItem->quantity += $quantity;
+            $newQuantity = $cartItem->quantity + $quantity;
+            // Ensure total quantity doesn't exceed stock
+            if ($newQuantity > $product->stock) {
+                return redirect()->back()
+                    ->with('error', 'Cannot add more items. Available stock: ' . $product->stock);
+            }
+            $cartItem->quantity = $newQuantity;
             $cartItem->save();
         } else {
             Cart::create([

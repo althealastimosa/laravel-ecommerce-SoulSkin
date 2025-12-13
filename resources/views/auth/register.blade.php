@@ -6,25 +6,25 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            background-color: #e0f7f1; 
+            background-color: #e0f7f1;
             font-family: 'Segoe UI', sans-serif;
         }
 
         .card {
-            background-color: #f0fcfa; 
+            background-color: #f0fcfa;
             border-radius: 15px;
             border: none;
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
         }
 
         h2 {
-            color: #2ca58d; 
+            color: #2ca58d;
         }
 
         .form-control {
             border-radius: 10px;
-            border: 1px solid #a0e5d8; 
-            background-color: #e0faf4; 
+            border: 1px solid #a0e5d8;
+            background-color: #e0faf4;
         }
 
         .form-control:focus {
@@ -32,14 +32,14 @@
             box-shadow: 0 0 5px rgba(79, 209, 197, 0.5);
         }
 
-        .btn-success {
-            background-color: #4fd1c5; 
+        .btn-dark {
+            background-color: #4fd1c5;
             border: none;
             border-radius: 10px;
         }
 
-        .btn-success:hover {
-            background-color: #38b59f; 
+        .btn-dark:hover {
+            background-color: #38b59f;
         }
 
         a {
@@ -58,7 +58,7 @@
 </head>
 <body>
     <div class="container mt-5">
-        <h2 class="text-center mb-4">Discover <strong>SoulSkin</strong> Today.</h2>
+        <h2 class="text-center mb-4">Create your <strong>SoulSkin</strong> account.</h2>
 
         <form action="{{ route('register.submit') }}" method="POST" class="card p-4 mx-auto" style="max-width: 400px;">
             @csrf
@@ -89,6 +89,22 @@
                 <input type="email" name="email" class="form-control" value="{{ old('email') }}" required>
             </div>
 
+            {{-- Account Type --}}
+            <div class="mb-3">
+                <label class="form-label">Account Type</label>
+                <div class="d-flex gap-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="account_type" id="accountCustomer" value="customer" {{ old('account_type', 'customer') === 'customer' ? 'checked' : '' }}>
+                        <label class="form-check-label" for="accountCustomer">Customer</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="account_type" id="accountAdmin" value="admin" {{ old('account_type') === 'admin' ? 'checked' : '' }}>
+                        <label class="form-check-label" for="accountAdmin">Admin</label>
+                    </div>
+                </div>
+                <small class="text-muted">Choose admin only if you manage store operations.</small>
+            </div>
+
             {{-- Password --}}
             <div class="mb-3">
                 <label class="form-label">Password</label>
@@ -96,7 +112,7 @@
             </div>
 
             {{-- Submit --}}
-            <button type="submit" class="btn btn-success w-100">Create Account</button>
+            <button type="submit" class="btn btn-dark w-100">Create Account</button>
 
             <p class="text-center mt-3">
                 Already have an account? <a href="{{ route('login') }}">Login here</a>

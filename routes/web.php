@@ -7,18 +7,17 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
 
-// Redirect root to login page
 Route::get('/', function () {
     return redirect()->route('login');
 });
 
-// Registration routes
-Route::get('/register', [CustomerAuthController::class, 'showRegister'])->name('register');
-Route::post('/register', [CustomerAuthController::class, 'registerSubmit'])->name('register.submit');
+Route::middleware('guest')->group(function () {
+    Route::get('/register', [CustomerAuthController::class, 'showRegister'])->name('register');
+    Route::post('/register', [CustomerAuthController::class, 'registerSubmit'])->name('register.submit');
 
-// Login routes
-Route::get('/login', [CustomerAuthController::class, 'showLogin'])->name('login');
-Route::post('/login', [CustomerAuthController::class, 'loginSubmit'])->name('login.submit');
+    Route::get('/login', [CustomerAuthController::class, 'showLogin'])->name('login');
+    Route::post('/login', [CustomerAuthController::class, 'loginSubmit'])->name('login.submit');
+});
 
 // Logout route
 Route::post('/logout', [CustomerAuthController::class, 'logout'])->name('logout');
@@ -72,4 +71,3 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::put('/admin/products/{product}', [ProductController::class, 'update'])->name('admin.products.update');
     Route::delete('/admin/products/{product}', [ProductController::class, 'destroy'])->name('admin.products.destroy');
 });
-

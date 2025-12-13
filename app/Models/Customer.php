@@ -16,6 +16,10 @@ class Customer extends Model
         'is_admin',
     ];
 
+    protected $casts = [
+        'is_admin' => 'boolean',
+    ];
+
     protected $hidden = [
         'password',
     ];

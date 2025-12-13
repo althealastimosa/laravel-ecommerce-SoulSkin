@@ -2,45 +2,38 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Customer;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class EnsureUserIsAdmin
 {
     public function handle(Request $request, Closure $next)
     {
-        // Check if user is authenticated via session (for Customer model)
-        $isAdmin = session('is_admin', false);
-        
-        // Also check Laravel's Auth facade (for User model if used)
-        $user = Auth::user();
-        
-        // Determine admin status
-        $hasAdminAccess = false;
-        
-        if ($user && ($user->is_admin ?? false)) {
-            $hasAdminAccess = true;
-        } elseif ($isAdmin) {
-            $hasAdminAccess = true;
-        }
-        
-        // If not authenticated at all
-        if (!$user && !session('customer_id')) {
+        $customerId = session('customer_id');
+
+        if (!$customerId) {
             if ($request->expectsJson()) {
                 return response()->json(['message' => 'Unauthorized'], 401);
             }
             return redirect()->route('login');
         }
-        
-        // If not admin
-        if (!$hasAdminAccess) {
+
+        $customer = Customer::find($customerId);
+
+        if (!$customer || !$customer->is_admin) {
             if ($request->expectsJson()) {
                 return response()->json(['message' => 'Forbidden'], 403);
             }
             abort(403, 'Access denied.');
         }
 
+        // Sync session with database
+        if (session('is_admin') !== $customer->is_admin) {
+            session(['is_admin' => $customer->is_admin]);
+        }
+
         return $next($request);
     }
 }
+
