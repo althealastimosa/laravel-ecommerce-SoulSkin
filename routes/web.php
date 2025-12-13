@@ -32,12 +32,7 @@ Route::get('/products', [ProductController::class, 'index'])->name('products.ind
 Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
 
 // Cart routes (require authentication)
-Route::middleware(function ($request, $next) {
-    if (!session('customer_id')) {
-        return redirect()->route('login')->with('error', 'Please login to access cart.');
-    }
-    return $next($request);
-})->group(function () {
+Route::middleware('customer.auth')->group(function () {
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
     Route::post('/cart/add/{product}', [CartController::class, 'add'])->name('cart.add');
     Route::put('/cart/{cart}', [CartController::class, 'update'])->name('cart.update');
@@ -46,22 +41,19 @@ Route::middleware(function ($request, $next) {
 });
 
 // Order routes (require authentication)
-Route::middleware(function ($request, $next) {
-    if (!session('customer_id')) {
-        return redirect()->route('login')->with('error', 'Please login to place orders.');
-    }
-    return $next($request);
-})->group(function () {
+Route::middleware('customer.auth')->group(function () {
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
     Route::get('/checkout', [OrderController::class, 'checkout'])->name('checkout');
     Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
 });
 
-// Admin routes protected by auth and admin middleware
-Route::middleware(['auth', 'admin'])->group(function () {
+// Admin routes protected by customer authentication and admin middleware
+Route::middleware(['customer.auth', 'admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
     Route::get('/admin/settings', [AdminController::class, 'settings'])->name('admin.settings');
+    Route::get('/admin/customers', [AdminController::class, 'customers'])->name('admin.customers');
+    Route::get('/admin/orders', [AdminController::class, 'orders'])->name('admin.orders');
     
     // Admin Product CRUD
     Route::get('/admin/products', [ProductController::class, 'index'])->name('admin.products.index');

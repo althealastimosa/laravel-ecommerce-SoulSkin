@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('customers', function (Blueprint $table) {
-            $table->boolean('is_admin')->default(false);
-        });
+        if (!Schema::hasColumn('customers', 'is_admin')) {
+            Schema::table('customers', function (Blueprint $table) {
+                $table->boolean('is_admin')->default(false);
+            });
+        }
     }
 
     /**

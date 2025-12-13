@@ -89,21 +89,6 @@
                 <input type="email" name="email" class="form-control" value="{{ old('email') }}" required>
             </div>
 
-            {{-- Account Type --}}
-            <div class="mb-3">
-                <label class="form-label">Account Type</label>
-                <div class="d-flex gap-3">
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="account_type" id="accountCustomer" value="customer" {{ old('account_type', 'customer') === 'customer' ? 'checked' : '' }}>
-                        <label class="form-check-label" for="accountCustomer">Customer</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="account_type" id="accountAdmin" value="admin" {{ old('account_type') === 'admin' ? 'checked' : '' }}>
-                        <label class="form-check-label" for="accountAdmin">Admin</label>
-                    </div>
-                </div>
-                <small class="text-muted">Choose admin only if you manage store operations.</small>
-            </div>
 
             {{-- Password --}}
             <div class="mb-3">

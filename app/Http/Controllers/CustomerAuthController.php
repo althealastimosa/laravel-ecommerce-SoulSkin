@@ -22,7 +22,6 @@ class CustomerAuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:customers',
             'password' => 'required|min:6',
-            'account_type' => 'nullable|in:customer,admin',
         ]);
 
        
@@ -30,7 +29,7 @@ class CustomerAuthController extends Controller
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
-            'is_admin' => ($validated['account_type'] ?? 'customer') === 'admin',
+            'is_admin' => false, // All registrations are customers by default
         ]);
 
        
@@ -58,11 +57,18 @@ class CustomerAuthController extends Controller
         
         if ($customer && Hash::check($credentials['password'], $customer->password)) {
             
+            $isAdmin = $customer->is_admin ?? false;
+            
             session([
                 'customer_id' => $customer->id,
                 'customer_name' => $customer->name,
-                'is_admin' => $customer->is_admin ?? false,
+                'is_admin' => $isAdmin,
             ]);
+
+            // Redirect admins to admin dashboard, regular customers to home
+            if ($isAdmin) {
+                return redirect()->route('admin.dashboard')->with('success', 'Welcome back, ' . $customer->name . '!');
+            }
 
             return redirect()->route('home')->with('success', 'Welcome back, ' . $customer->name . '!');
         }
