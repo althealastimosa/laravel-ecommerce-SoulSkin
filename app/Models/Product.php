@@ -5,19 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Customer extends Model
+class Product extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'name',
-        'email',
-        'password',
-        'is_admin',
-    ];
-
-    protected $hidden = [
-        'password',
+        'description',
+        'price',
+        'stock',
+        'image',
     ];
 
     public function carts()
@@ -25,8 +22,8 @@ class Customer extends Model
         return $this->hasMany(Cart::class);
     }
 
-    public function orders()
+    public function orderItems()
     {
-        return $this->hasMany(Order::class);
+        return $this->hasMany(OrderItem::class);
     }
 }
