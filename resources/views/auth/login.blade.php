@@ -6,49 +6,52 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            background-color: #e0f7f1;
+            background-color: #F1F3E0;
             font-family: 'Segoe UI', sans-serif;
         }
 
         .card {
-            background-color: #f0fcfa;
+            background-color: white;
             border-radius: 15px;
             border: none;
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
         }
 
         h2 {
-            color: #2ca58d;
+            color: #A1BC98;
         }
 
         .form-control {
             border-radius: 10px;
-            border: 1px solid #a0e5d8;
-            background-color: #e0faf4;
+            border: 1px solid #A1BC98;
+            background-color: #F1F3E0;
         }
 
         .form-control:focus {
-            border-color: #4fd1c5;
-            box-shadow: 0 0 5px rgba(94, 215, 203, 0.5);
+            border-color: #A1BC98;
+            box-shadow: 0 0 5px rgba(161, 188, 152, 0.5);
+            background-color: white;
         }
 
         .btn-dark {
-            background-color: #4fd1c5;
+            background-color: #A1BC98;
             border: none;
             border-radius: 10px;
+            color: white;
         }
 
         .btn-dark:hover {
-            background-color: #38b59f;
+            background-color: #8fa885;
+            color: white;
         }
 
         a {
-            color: #2ca58d;
+            color: #A1BC98;
             text-decoration: none;
         }
 
         a:hover {
-            color: #1e7862;
+            color: #7a9671;
         }
     </style>
 </head>

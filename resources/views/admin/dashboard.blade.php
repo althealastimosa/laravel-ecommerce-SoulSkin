@@ -8,11 +8,11 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
         body {
-            background-color: #f5f7fa;
+            background-color: #F1F3E0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         .dashboard-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #A1BC98;
             color: white;
             padding: 2rem 0;
             margin-bottom: 2rem;
@@ -30,10 +30,10 @@
             transform: translateY(-5px);
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
-        .stat-card.products { border-left-color: #4fc1b8; }
-        .stat-card.orders { border-left-color: #667eea; }
-        .stat-card.customers { border-left-color: #f093fb; }
-        .stat-card.revenue { border-left-color: #4facfe; }
+        .stat-card.products { border-left-color: #A1BC98; }
+        .stat-card.orders { border-left-color: #A1BC98; }
+        .stat-card.customers { border-left-color: #A1BC98; }
+        .stat-card.revenue { border-left-color: #A1BC98; }
         .stat-number {
             font-size: 2.5rem;
             font-weight: bold;
@@ -46,7 +46,7 @@
             letter-spacing: 0.5px;
         }
         .action-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #A1BC98;
             color: white;
             border: none;
             padding: 0.75rem 1.5rem;
@@ -56,7 +56,8 @@
         }
         .action-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 4px 12px rgba(161, 188, 152, 0.4);
+            background: #8fa885;
             color: white;
         }
         .product-form-card {
@@ -108,7 +109,7 @@
                 <div class="stat-card products">
                     <div class="d-flex align-items-center">
                         <div class="me-3">
-                            <i class="bi bi-box-seam" style="font-size: 2.5rem; color: #4fc1b8;"></i>
+                            <i class="bi bi-box-seam" style="font-size: 2.5rem; color: #A1BC98;"></i>
                         </div>
                         <div>
                             <div class="stat-number">{{ $totalProducts }}</div>
@@ -121,7 +122,7 @@
                 <div class="stat-card orders">
                     <div class="d-flex align-items-center">
                         <div class="me-3">
-                            <i class="bi bi-cart-check" style="font-size: 2.5rem; color: #667eea;"></i>
+                            <i class="bi bi-cart-check" style="font-size: 2.5rem; color: #A1BC98;"></i>
                         </div>
                         <div>
                             <div class="stat-number">{{ $totalOrders }}</div>
@@ -134,7 +135,7 @@
                 <div class="stat-card customers">
                     <div class="d-flex align-items-center">
                         <div class="me-3">
-                            <i class="bi bi-people" style="font-size: 2.5rem; color: #f093fb;"></i>
+                            <i class="bi bi-people" style="font-size: 2.5rem; color: #A1BC98;"></i>
                         </div>
                         <div>
                             <div class="stat-number">{{ $totalCustomers }}</div>
@@ -147,7 +148,7 @@
                 <div class="stat-card revenue">
                     <div class="d-flex align-items-center">
                         <div class="me-3">
-                            <i class="bi bi-currency-dollar" style="font-size: 2.5rem; color: #4facfe;"></i>
+                            <i class="bi bi-currency-dollar" style="font-size: 2.5rem; color: #A1BC98;"></i>
                         </div>
                         <div>
                             <div class="stat-number">${{ number_format($totalRevenue, 2) }}</div>
@@ -201,7 +202,7 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('admin.products.store') }}" method="POST">
+                    <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="mb-3">
                             <label for="name" class="form-label">Product Name <span class="text-danger">*</span></label>
@@ -229,9 +230,9 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="image" class="form-label">Product Image URL</label>
-                            <input type="text" class="form-control" id="image" name="image" value="{{ old('image') }}" placeholder="https://example.com/image.jpg">
-                            <small class="text-muted">Enter a URL for the product image</small>
+                            <label for="image" class="form-label">Product Image</label>
+                            <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                            <small class="text-muted">Upload an image file (JPG, PNG, etc.)</small>
                         </div>
 
                         <button type="submit" class="btn action-btn w-100">

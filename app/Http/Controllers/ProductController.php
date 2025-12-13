@@ -34,10 +34,19 @@ class ProductController extends Controller
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
-            'image' => 'nullable|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        Product::create($validated);
+        $data = $request->except('image');
+
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            $image->storeAs('public/products', $imageName);
+            $data['image'] = '/storage/products/' . $imageName;
+        }
+
+        Product::create($data);
 
         return redirect()->route('products.index')
             ->with('success', 'Product created successfully.');
@@ -69,10 +78,24 @@ class ProductController extends Controller
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
-            'image' => 'nullable|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $product->update($validated);
+        $data = $request->except('image');
+
+        if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($product->image && file_exists(public_path($product->image))) {
+                unlink(public_path($product->image));
+            }
+            
+            $image = $request->file('image');
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            $image->storeAs('public/products', $imageName);
+            $data['image'] = '/storage/products/' . $imageName;
+        }
+
+        $product->update($data);
 
         return redirect()->route('products.index')
             ->with('success', 'Product updated successfully.');
