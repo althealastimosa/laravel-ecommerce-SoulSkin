@@ -38,9 +38,10 @@ class ProductController extends Controller
 
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            // store on the public disk and use Storage::url() for consistency
-            $path = $image->store('public/products');
-            $data['image'] = Storage::url($path);
+            // Store on the public disk
+            $path = $image->store('products', 'public');
+            // Use the correct path format for asset() helper
+            $data['image'] = '/storage/' . $path;
         }
 
         $product = Product::create($data);
@@ -85,11 +86,18 @@ class ProductController extends Controller
                 if (file_exists($existing)) {
                     @unlink($existing);
                 }
+                // Also try to delete from storage if it exists there
+                $storagePath = str_replace('/storage/', '', $product->image);
+                if (Storage::disk('public')->exists($storagePath)) {
+                    Storage::disk('public')->delete($storagePath);
+                }
             }
 
             $image = $request->file('image');
-            $path = $image->store('public/products');
-            $data['image'] = Storage::url($path);
+            // Store on the public disk
+            $path = $image->store('products', 'public');
+            // Use the correct path format for asset() helper
+            $data['image'] = '/storage/' . $path;
         }
 
         $product->update($data);

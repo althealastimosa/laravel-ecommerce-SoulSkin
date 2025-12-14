@@ -7,19 +7,106 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
+        :root {
+            --ss-primary: #A1BC98;
+            --ss-background: #F1F3E0;
+        }
         body {
-            background-color: #f5f7fa;
+            background-color: var(--ss-background);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         .page-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--ss-primary);
             color: white;
             padding: 2rem 0;
             margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(161,188,152,0.3);
         }
         .card {
             border-radius: 12px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            background-color: #ffffff;
+        }
+        .btn-light {
+            background-color: #ffffff;
+            color: var(--ss-primary);
+            border: 1px solid #ffffff;
+        }
+        .btn-light:hover {
+            background-color: #f8f9fa;
+            color: var(--ss-primary);
+        }
+        .btn-outline-light {
+            background-color: transparent;
+            color: #ffffff;
+            border: 1px solid #ffffff;
+        }
+        .btn-outline-light:hover {
+            background-color: #ffffff;
+            color: var(--ss-primary);
+        }
+        .btn-success {
+            background-color: var(--ss-primary);
+            border-color: var(--ss-primary);
+            color: #ffffff;
+        }
+        .btn-success:hover {
+            background-color: #8BAA7E;
+            border-color: #8BAA7E;
+            color: #ffffff;
+        }
+        .btn-outline-primary {
+            color: var(--ss-primary);
+            border-color: var(--ss-primary);
+        }
+        .btn-outline-primary:hover {
+            background-color: var(--ss-primary);
+            border-color: var(--ss-primary);
+            color: #ffffff;
+        }
+        .badge.bg-warning {
+            background-color: #ffc107 !important;
+            color: #212529;
+        }
+        .badge.bg-info {
+            background-color: #0dcaf0 !important;
+            color: #000;
+        }
+        .badge.bg-primary {
+            background-color: var(--ss-primary) !important;
+            color: #ffffff;
+        }
+        .badge.bg-success {
+            background-color: #198754 !important;
+            color: #ffffff;
+        }
+        .badge.bg-danger {
+            background-color: #dc3545 !important;
+            color: #ffffff;
+        }
+        .table {
+            background-color: #ffffff;
+        }
+        .table thead th {
+            background-color: #f8f9fa;
+            color: #212529;
+            font-weight: 600;
+            border-bottom: 2px solid var(--ss-primary);
+        }
+        .table tbody tr:hover {
+            background-color: rgba(161,188,152,0.05);
+        }
+        .alert {
+            border-radius: 8px;
+            border: none;
+        }
+        .alert-success {
+            background-color: #d1e7dd;
+            color: #0f5132;
+        }
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #842029;
         }
     </style>
 </head>
@@ -35,15 +122,35 @@
                     <a href="{{ route('admin.dashboard') }}" class="btn btn-light me-2">
                         <i class="bi bi-arrow-left"></i> Back to Dashboard
                     </a>
-                    <a href="{{ route('home') }}" class="btn btn-outline-light">
+                    <a href="{{ route('home') }}" class="btn btn-outline-light me-2">
                         <i class="bi bi-house"></i> Storefront
                     </a>
+                    <form action="{{ route('logout') }}" method="POST" class="d-inline">
+                        @csrf
+                        <button type="submit" class="btn btn-outline-light">
+                            <i class="bi bi-box-arrow-right"></i> Logout
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="container">
+        @if(session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        @endif
+
         <div class="card">
             <div class="card-body">
                 @if($orders->count() > 0)
@@ -78,25 +185,27 @@
                                         </td>
                                         <td><strong>₱{{ number_format($order->total_amount, 2) }}</strong></td>
                                         <td>
-                                            <a href="{{ route('orders.show', $order) }}" class="btn btn-sm btn-outline-primary">
-                                                <i class="bi bi-eye"></i> View
-                                            </a>
+                                            <div class="d-flex gap-2 align-items-center">
+                                                <a href="{{ route('orders.show', $order) }}" class="btn btn-sm btn-outline-primary">
+                                                    <i class="bi bi-eye"></i> View
+                                                </a>
 
-                                            @if($order->status == 'pending')
-                                                <form method="POST" action="{{ route('admin.orders.accept', $order) }}" class="d-inline-block ms-1">
-                                                    @csrf
-                                                    <button type="submit" class="btn btn-sm btn-success" onclick="return confirm('Accept this order?')">
-                                                        <i class="bi bi-check2-circle"></i> Accept
-                                                    </button>
-                                                </form>
+                                                @if($order->status == 'pending')
+                                                    <form method="POST" action="{{ route('admin.orders.accept', $order) }}" class="d-inline" onsubmit="return confirm('Are you sure you want to accept this order?');">
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-sm btn-success">
+                                                            <i class="bi bi-check2-circle"></i> Accept
+                                                        </button>
+                                                    </form>
 
-                                                <form method="POST" action="{{ route('admin.orders.decline', $order) }}" class="d-inline-block ms-1">
-                                                    @csrf
-                                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Decline this order?')">
-                                                        <i class="bi bi-x-circle"></i> Decline
-                                                    </button>
-                                                </form>
-                                            @endif
+                                                    <form method="POST" action="{{ route('admin.orders.decline', $order) }}" class="d-inline" onsubmit="return confirm('Are you sure you want to decline this order? Stock will be restored.');">
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-sm btn-danger">
+                                                            <i class="bi bi-x-circle"></i> Decline
+                                                        </button>
+                                                    </form>
+                                                @endif
+                                            </div>
                                         </td>
                                     </tr>
                                 @endforeach

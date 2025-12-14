@@ -50,59 +50,115 @@ class AdminController extends Controller
     }
 
     /**
-     * Accept an order (change status to processing)
+     * Accept an order (change status to shipped)
      */
-    public function acceptOrder(Order $order)
+    public function acceptOrder(Request $request, Order $order)
     {
+        // Verify the order exists and is pending
         if ($order->status !== 'pending') {
-            return back()->with('error', 'Only pending orders can be accepted.');
+            return redirect()->route('admin.orders')
+                ->with('error', 'Only pending orders can be accepted.');
         }
 
         try {
-            // Debug logging: record current status
-            Log::info('Admin acceptOrder called', ['order_id' => $order->id, 'before_status' => $order->status]);
-
-            // Mark as shipped when admin accepts (change as needed)
+            // Use DB transaction to ensure data consistency
+            DB::beginTransaction();
+            
+            // Update the order status
             $order->status = 'shipped';
-            $order->save();
+            $saved = $order->save();
+            
+            if (!$saved) {
+                throw new \Exception('Failed to save order status');
+            }
+
+            DB::commit();
+
+            // Refresh to get latest data
             $order->refresh();
 
-            Log::info('Order status updated', ['order_id' => $order->id, 'after_status' => $order->status]);
-        } catch (\Exception $e) {
-            Log::error('Failed to accept order', ['order_id' => $order->id, 'error' => $e->getMessage()]);
-            return redirect()->route('admin.orders')->with('error', 'Failed to accept order: ' . $e->getMessage());
-        }
+            Log::info('Order accepted successfully', [
+                'order_id' => $order->id,
+                'order_number' => $order->order_number,
+                'new_status' => $order->status
+            ]);
 
-        return redirect()->route('admin.orders')->with(['success' => 'Order ' . $order->order_number . ' has been accepted.', 'order_status' => $order->status]);
+            return redirect()->route('admin.orders')
+                ->with('success', 'Order ' . $order->order_number . ' has been accepted and marked as shipped.');
+                
+        } catch (\Exception $e) {
+            DB::rollBack();
+            
+            Log::error('Failed to accept order', [
+                'order_id' => $order->id ?? null,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return redirect()->route('admin.orders')
+                ->with('error', 'Failed to accept order: ' . $e->getMessage());
+        }
     }
 
     /**
      * Decline an order (change status to cancelled and restore stock)
      */
-    public function declineOrder(Order $order)
+    public function declineOrder(Request $request, Order $order)
     {
+        // Verify the order exists and is pending
         if ($order->status !== 'pending') {
-            return back()->with('error', 'Only pending orders can be declined.');
-        }
-
-        // Load order items with products
-        $order->load('orderItems.product');
-
-        // Restore product stock
-        foreach ($order->orderItems as $orderItem) {
-            if ($orderItem->product) {
-                $orderItem->product->increment('stock', $orderItem->quantity);
-            }
+            return redirect()->route('admin.orders')
+                ->with('error', 'Only pending orders can be declined.');
         }
 
         try {
-            $order->status = 'cancelled';
-            $order->save();
-        } catch (\Exception $e) {
-            return back()->with('error', 'Failed to decline order: ' . $e->getMessage());
-        }
+            // Use DB transaction to ensure data consistency
+            DB::beginTransaction();
 
-        return back()->with('success', 'Order ' . $order->order_number . ' has been declined and stock has been restored.');
+            // Load order items with products
+            $order->load('orderItems.product');
+
+            // Restore product stock
+            foreach ($order->orderItems as $orderItem) {
+                if ($orderItem->product) {
+                    $orderItem->product->increment('stock', $orderItem->quantity);
+                }
+            }
+
+            // Update order status
+            $order->status = 'cancelled';
+            $saved = $order->save();
+            
+            if (!$saved) {
+                throw new \Exception('Failed to save order status');
+            }
+
+            DB::commit();
+
+            // Refresh to get latest data
+            $order->refresh();
+
+            Log::info('Order declined successfully', [
+                'order_id' => $order->id,
+                'order_number' => $order->order_number,
+                'new_status' => $order->status
+            ]);
+
+            return redirect()->route('admin.orders')
+                ->with('success', 'Order ' . $order->order_number . ' has been declined and stock has been restored.');
+                
+        } catch (\Exception $e) {
+            DB::rollBack();
+            
+            Log::error('Failed to decline order', [
+                'order_id' => $order->id ?? null,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return redirect()->route('admin.orders')
+                ->with('error', 'Failed to decline order: ' . $e->getMessage());
+        }
     }
 
     /**

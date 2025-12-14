@@ -4,49 +4,29 @@
 
 @section('content')
 <div class="row">
-    <div class="col-md-6">
-        @php
-            $imgPath = $product->image;
-            $publicImg = $imgPath ? public_path(ltrim($imgPath, '/')) : null;
-
-            if (!($imgPath && $publicImg && file_exists($publicImg))) {
-                $candidates = [];
-                $dir = public_path('storage/products');
-                if (is_dir($dir)) {
-                    foreach (scandir($dir) as $f) {
-                        if (in_array($f, ['.', '..'])) continue;
-                        $candidates[] = $f;
-                    }
-                }
-
-                $nameSlug = strtolower(preg_replace('/[^a-z0-9]+/i', '_', $product->name));
-                foreach ($candidates as $c) {
-                    if (stripos($c, $nameSlug) !== false || stripos($c, strtolower($product->name)) !== false) {
-                        $imgPath = '/storage/products/' . $c;
-                        $publicImg = public_path(ltrim($imgPath, '/'));
-                        break;
-                    }
-                }
-            }
-        @endphp
-
-        @if($imgPath && $publicImg && file_exists($publicImg))
-            <img src="{{ asset($imgPath) }}" class="img-fluid rounded" alt="{{ $product->name }}">
+    <div class="col-md-6 mb-4">
+        @if($product->hasImage() && $product->image_url)
+            <div class="product-image-container">
+                <img src="{{ $product->image_url }}" class="img-fluid" alt="{{ $product->name }}">
+            </div>
         @else
-            <div class="bg-secondary d-flex align-items-center justify-content-center rounded" style="height: 400px;">
-                <i class="bi bi-image text-white" style="font-size: 5rem;"></i>
+            <div class="product-image-placeholder d-flex align-items-center justify-content-center">
+                <div class="text-center">
+                    <i class="bi bi-image text-secondary" style="font-size: 5rem;"></i>
+                    <p class="text-muted mt-2">No image available</p>
+                </div>
             </div>
         @endif
     </div>
     <div class="col-md-6">
-        <h1>{{ $product->name }}</h1>
-        <p class="text-muted">{{ $product->description }}</p>
-        <h3 class="text-primary mb-3">₱{{ number_format($product->price, 2) }}</h3>
-        <p><strong>Stock:</strong> {{ $product->stock }} units</p>
+        <h1 class="product-title">{{ $product->name }}</h1>
+        <p class="product-description">{{ $product->description }}</p>
+        <h3 class="product-price">₱{{ number_format($product->price, 2) }}</h3>
+        <p class="product-stock"><strong>Stock:</strong> {{ $product->stock }} units</p>
         
         @if(session('customer_id'))
             @if($product->stock > 0)
-                <form action="{{ route('cart.add', $product) }}" method="POST" class="mb-3">
+                <form action="{{ route('cart.add', $product) }}" method="POST" class="mb-4">
                     @csrf
                     <div class="mb-3">
                         <label for="quantity" class="form-label">Quantity</label>
@@ -68,7 +48,7 @@
         @endif
 
         @if(session('is_admin'))
-            <div class="mt-4">
+            <div class="product-actions">
                 <a href="{{ route('admin.products.edit', $product) }}" class="btn btn-warning">
                     <i class="bi bi-pencil"></i> Edit Product
                 </a>

@@ -36,8 +36,17 @@
     .recent-orders-card { background: #ffffff; border-radius: 12px; padding: 1.25rem; box-shadow: 0 8px 26px rgba(0,0,0,0.05); min-height: 260px; }
     .table th { background-color: #f8f9fa; font-weight: 600; color: #495057; border-top: 0; }
     .badge-status { padding: 0.35rem 0.75rem; border-radius: 20px; font-size: 0.85rem; }
-    .dashboard-header .btn { background: #ffffff; color: #2c3e50; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); border: none; }
+    .badge-status.bg-warning { background-color: #ffc107 !important; color: #212529; }
+    .badge-status.bg-info { background-color: #0dcaf0 !important; color: #000; }
+    .badge-status.bg-primary { background-color: var(--ss-primary) !important; color: #ffffff; }
+    .badge-status.bg-success { background-color: #198754 !important; color: #ffffff; }
+    .badge-status.bg-danger { background-color: #dc3545 !important; color: #ffffff; }
+    .dashboard-header .btn { background: #ffffff; color: var(--ss-primary); border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); border: none; font-weight: 500; }
+    .dashboard-header .btn:hover { background: #f8f9fa; color: var(--ss-primary); }
     .recent-orders-card .btn-outline-primary { color: var(--ss-primary); border-color: var(--ss-primary); }
+    .recent-orders-card .btn-outline-primary:hover { background-color: var(--ss-primary); color: #ffffff; }
+    .table th { background-color: #f8f9fa; font-weight: 600; color: #495057; border-top: 0; border-bottom: 2px solid var(--ss-primary); }
+    .table tbody tr:hover { background-color: rgba(161,188,152,0.05); }
     @media (max-width: 767px){ .stat-number { font-size: 1.8rem; } .dashboard-header { padding: 1rem; } }
 </style>
 @endsection

@@ -7,19 +7,63 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
+        :root {
+            --ss-primary: #A1BC98;
+            --ss-background: #F1F3E0;
+        }
         body {
-            background-color: #f5f7fa;
+            background-color: var(--ss-background);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         .page-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--ss-primary);
             color: white;
             padding: 2rem 0;
             margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(161,188,152,0.3);
         }
         .card {
             border-radius: 12px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            background-color: #ffffff;
+        }
+        .btn-light {
+            background-color: #ffffff;
+            color: var(--ss-primary);
+            border: 1px solid #ffffff;
+        }
+        .btn-light:hover {
+            background-color: #f8f9fa;
+            color: var(--ss-primary);
+        }
+        .btn-outline-light {
+            background-color: transparent;
+            color: #ffffff;
+            border: 1px solid #ffffff;
+        }
+        .btn-outline-light:hover {
+            background-color: #ffffff;
+            color: var(--ss-primary);
+        }
+        .badge.bg-danger {
+            background-color: #dc3545 !important;
+            color: #ffffff;
+        }
+        .badge.bg-secondary {
+            background-color: var(--ss-primary) !important;
+            color: #ffffff;
+        }
+        .table {
+            background-color: #ffffff;
+        }
+        .table thead th {
+            background-color: #f8f9fa;
+            color: #212529;
+            font-weight: 600;
+            border-bottom: 2px solid var(--ss-primary);
+        }
+        .table tbody tr:hover {
+            background-color: rgba(161,188,152,0.05);
         }
     </style>
 </head>
@@ -35,9 +79,15 @@
                     <a href="{{ route('admin.dashboard') }}" class="btn btn-light me-2">
                         <i class="bi bi-arrow-left"></i> Back to Dashboard
                     </a>
-                    <a href="{{ route('home') }}" class="btn btn-outline-light">
+                    <a href="{{ route('home') }}" class="btn btn-outline-light me-2">
                         <i class="bi bi-house"></i> Storefront
                     </a>
+                    <form action="{{ route('logout') }}" method="POST" class="d-inline">
+                        @csrf
+                        <button type="submit" class="btn btn-outline-light">
+                            <i class="bi bi-box-arrow-right"></i> Logout
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>

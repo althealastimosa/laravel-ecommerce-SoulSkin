@@ -55,7 +55,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <img id="imagePreview" src="" class="img-fluid rounded d-none" style="max-height:300px; object-fit:cover;">
+                        <img id="imagePreview" src="" class="img-fluid rounded d-none shadow-sm" style="max-height:300px; object-fit:cover; background-color: #f8f9fa; width: 100%;">
                     </div>
                     <div class="d-flex gap-2">
                         <button type="submit" class="btn btn-primary">Create Product</button>
