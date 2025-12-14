@@ -22,7 +22,6 @@ Route::middleware('guest')->group(function () {
 // Logout route
 Route::post('/logout', [CustomerAuthController::class, 'logout'])->name('logout');
 
-// Home page (after login) - redirect based on user role
 Route::get('/home', function () {
     if (session('customer_id')) {
         if (session('is_admin')) {
@@ -33,11 +32,11 @@ Route::get('/home', function () {
     return redirect()->route('login');
 })->name('home');
 
-// Products routes (public viewing)
+// Products routes 
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
 
-// Cart routes (require authentication)
+// Cart routes 
 Route::middleware('customer.auth')->group(function () {
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
     Route::post('/cart/add/{product}', [CartController::class, 'add'])->name('cart.add');
@@ -46,7 +45,7 @@ Route::middleware('customer.auth')->group(function () {
     Route::delete('/cart', [CartController::class, 'clear'])->name('cart.clear');
 });
 
-// Order routes (require authentication)
+// Order routes 
 Route::middleware('customer.auth')->group(function () {
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
@@ -54,7 +53,6 @@ Route::middleware('customer.auth')->group(function () {
     Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
 });
 
-// Admin routes protected by customer authentication and admin middleware
 Route::middleware(['customer.auth', 'admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
     Route::get('/admin/settings', [AdminController::class, 'settings'])->name('admin.settings');
@@ -64,7 +62,7 @@ Route::middleware(['customer.auth', 'admin'])->group(function () {
     Route::post('/admin/orders/{order}/decline', [AdminController::class, 'declineOrder'])->name('admin.orders.decline');
     Route::get('/admin/repair-product-images', [AdminController::class, 'repairProductImages'])->name('admin.repair.images');
     
-    // Admin Product CRUD
+    // Admin Product 
     Route::get('/admin/products', [ProductController::class, 'index'])->name('admin.products.index');
     Route::get('/admin/products/create', [ProductController::class, 'create'])->name('admin.products.create');
     Route::post('/admin/products', [ProductController::class, 'store'])->name('admin.products.store');
