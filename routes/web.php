@@ -22,9 +22,15 @@ Route::middleware('guest')->group(function () {
 // Logout route
 Route::post('/logout', [CustomerAuthController::class, 'logout'])->name('logout');
 
-// Home page (after login)
+// Home page (after login) - redirect based on user role
 Route::get('/home', function () {
-    return view('home');
+    if (session('customer_id')) {
+        if (session('is_admin')) {
+            return redirect()->route('admin.dashboard');
+        }
+        return redirect()->route('products.index');
+    }
+    return redirect()->route('login');
 })->name('home');
 
 // Products routes (public viewing)
@@ -54,6 +60,9 @@ Route::middleware(['customer.auth', 'admin'])->group(function () {
     Route::get('/admin/settings', [AdminController::class, 'settings'])->name('admin.settings');
     Route::get('/admin/customers', [AdminController::class, 'customers'])->name('admin.customers');
     Route::get('/admin/orders', [AdminController::class, 'orders'])->name('admin.orders');
+    Route::post('/admin/orders/{order}/accept', [AdminController::class, 'acceptOrder'])->name('admin.orders.accept');
+    Route::post('/admin/orders/{order}/decline', [AdminController::class, 'declineOrder'])->name('admin.orders.decline');
+    Route::get('/admin/repair-product-images', [AdminController::class, 'repairProductImages'])->name('admin.repair.images');
     
     // Admin Product CRUD
     Route::get('/admin/products', [ProductController::class, 'index'])->name('admin.products.index');

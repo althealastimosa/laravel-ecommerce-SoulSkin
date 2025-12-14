@@ -22,7 +22,7 @@
                     <tr>
                         <td><strong>{{ $order->order_number }}</strong></td>
                         <td>{{ $order->created_at->format('M d, Y') }}</td>
-                        <td>${{ number_format($order->total_amount, 2) }}</td>
+                        <td>₱{{ number_format($order->total_amount, 2) }}</td>
                         <td>
                             <span class="badge 
                                 @if($order->status == 'pending') bg-warning

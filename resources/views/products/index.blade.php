@@ -16,8 +16,34 @@
     @forelse($products as $product)
         <div class="col-md-4 mb-4">
             <div class="card h-100">
-                @if($product->image)
-                    <img src="{{ $product->image }}" class="card-img-top" alt="{{ $product->name }}" style="height: 200px; object-fit: cover;">
+                @php
+                    $imgPath = $product->image;
+                    $publicImg = $imgPath ? public_path(ltrim($imgPath, '/')) : null;
+
+                    // If the DB path doesn't exist on disk, try to find a matching file in public/storage/products
+                    if (!($imgPath && $publicImg && file_exists($publicImg))) {
+                        $candidates = [];
+                        $dir = public_path('storage/products');
+                        if (is_dir($dir)) {
+                            foreach (scandir($dir) as $f) {
+                                if (in_array($f, ['.', '..'])) continue;
+                                $candidates[] = $f;
+                            }
+                        }
+
+                        $nameSlug = strtolower(preg_replace('/[^a-z0-9]+/i', '_', $product->name));
+                        foreach ($candidates as $c) {
+                            if (stripos($c, $nameSlug) !== false || stripos($c, strtolower($product->name)) !== false) {
+                                $imgPath = '/storage/products/' . $c;
+                                $publicImg = public_path(ltrim($imgPath, '/'));
+                                break;
+                            }
+                        }
+                    }
+                @endphp
+
+                @if($imgPath && $publicImg && file_exists($publicImg))
+                    <img src="{{ asset($imgPath) }}" class="card-img-top" alt="{{ $product->name }}" style="height: 200px; object-fit: cover;">
                 @else
                     <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center" style="height: 200px;">
                         <i class="bi bi-image text-white" style="font-size: 3rem;"></i>
@@ -28,7 +54,7 @@
                     <p class="card-text text-muted">{{ Str::limit($product->description, 100) }}</p>
                     <div class="mt-auto">
                         <p class="card-text">
-                            <strong class="text-primary">${{ number_format($product->price, 2) }}</strong>
+                            <strong class="text-primary">₱{{ number_format($product->price, 2) }}</strong>
                             <span class="text-muted ms-2">Stock: {{ $product->stock }}</span>
                         </p>
                         <div class="d-flex gap-2">
@@ -38,6 +64,7 @@
                             @if(session('customer_id') && $product->stock > 0)
                                 <form action="{{ route('cart.add', $product) }}" method="POST" class="flex-fill">
                                     @csrf
+                                    <input type="hidden" name="quantity" value="1">
                                     <button type="submit" class="btn btn-primary btn-sm w-100">
                                         <i class="bi bi-cart-plus"></i> Add to Cart
                                     </button>

@@ -35,15 +35,15 @@
                                     </div>
                                 </td>
                                 <td>{{ $item->quantity }}</td>
-                                <td>${{ number_format($item->product->price, 2) }}</td>
-                                <td>${{ number_format($item->quantity * $item->product->price, 2) }}</td>
+                                <td>₱{{ number_format($item->product->price, 2) }}</td>
+                                <td>₱{{ number_format($item->quantity * $item->product->price, 2) }}</td>
                             </tr>
                         @endforeach
                     </tbody>
                     <tfoot>
                         <tr>
                             <th colspan="3" class="text-end">Total:</th>
-                            <th class="text-primary">${{ number_format($total, 2) }}</th>
+                            <th class="text-primary">₱{{ number_format($total, 2) }}</th>
                         </tr>
                     </tfoot>
                 </table>
@@ -99,7 +99,7 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between mb-2">
                     <span>Subtotal:</span>
-                    <strong>${{ number_format($total, 2) }}</strong>
+                    <strong>₱{{ number_format($total, 2) }}</strong>
                 </div>
                 <div class="d-flex justify-content-between mb-2">
                     <span>Shipping:</span>
@@ -108,7 +108,7 @@
                 <hr>
                 <div class="d-flex justify-content-between">
                     <span><strong>Total:</strong></span>
-                    <strong class="text-primary">${{ number_format($total, 2) }}</strong>
+                    <strong class="text-primary">₱{{ number_format($total, 2) }}</strong>
                 </div>
             </div>
         </div>

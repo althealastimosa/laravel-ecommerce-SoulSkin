@@ -76,11 +76,27 @@
                                                 {{ ucfirst($order->status) }}
                                             </span>
                                         </td>
-                                        <td><strong>${{ number_format($order->total_amount, 2) }}</strong></td>
+                                        <td><strong>₱{{ number_format($order->total_amount, 2) }}</strong></td>
                                         <td>
                                             <a href="{{ route('orders.show', $order) }}" class="btn btn-sm btn-outline-primary">
                                                 <i class="bi bi-eye"></i> View
                                             </a>
+
+                                            @if($order->status == 'pending')
+                                                <form method="POST" action="{{ route('admin.orders.accept', $order) }}" class="d-inline-block ms-1">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-sm btn-success" onclick="return confirm('Accept this order?')">
+                                                        <i class="bi bi-check2-circle"></i> Accept
+                                                    </button>
+                                                </form>
+
+                                                <form method="POST" action="{{ route('admin.orders.decline', $order) }}" class="d-inline-block ms-1">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Decline this order?')">
+                                                        <i class="bi bi-x-circle"></i> Decline
+                                                    </button>
+                                                </form>
+                                            @endif
                                         </td>
                                     </tr>
                                 @endforeach

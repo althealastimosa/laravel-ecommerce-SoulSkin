@@ -5,8 +5,33 @@
 @section('content')
 <div class="row">
     <div class="col-md-6">
-        @if($product->image)
-            <img src="{{ $product->image }}" class="img-fluid rounded" alt="{{ $product->name }}">
+        @php
+            $imgPath = $product->image;
+            $publicImg = $imgPath ? public_path(ltrim($imgPath, '/')) : null;
+
+            if (!($imgPath && $publicImg && file_exists($publicImg))) {
+                $candidates = [];
+                $dir = public_path('storage/products');
+                if (is_dir($dir)) {
+                    foreach (scandir($dir) as $f) {
+                        if (in_array($f, ['.', '..'])) continue;
+                        $candidates[] = $f;
+                    }
+                }
+
+                $nameSlug = strtolower(preg_replace('/[^a-z0-9]+/i', '_', $product->name));
+                foreach ($candidates as $c) {
+                    if (stripos($c, $nameSlug) !== false || stripos($c, strtolower($product->name)) !== false) {
+                        $imgPath = '/storage/products/' . $c;
+                        $publicImg = public_path(ltrim($imgPath, '/'));
+                        break;
+                    }
+                }
+            }
+        @endphp
+
+        @if($imgPath && $publicImg && file_exists($publicImg))
+            <img src="{{ asset($imgPath) }}" class="img-fluid rounded" alt="{{ $product->name }}">
         @else
             <div class="bg-secondary d-flex align-items-center justify-content-center rounded" style="height: 400px;">
                 <i class="bi bi-image text-white" style="font-size: 5rem;"></i>
@@ -16,7 +41,7 @@
     <div class="col-md-6">
         <h1>{{ $product->name }}</h1>
         <p class="text-muted">{{ $product->description }}</p>
-        <h3 class="text-primary mb-3">${{ number_format($product->price, 2) }}</h3>
+        <h3 class="text-primary mb-3">₱{{ number_format($product->price, 2) }}</h3>
         <p><strong>Stock:</strong> {{ $product->stock }} units</p>
         
         @if(session('customer_id'))

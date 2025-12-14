@@ -10,7 +10,7 @@
                 <h3>Edit Product</h3>
             </div>
             <div class="card-body">
-                <form action="{{ route('admin.products.update', $product) }}" method="POST">
+                <form action="{{ route('admin.products.update', $product) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     <div class="mb-3">
@@ -48,11 +48,19 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="image" class="form-label">Image URL</label>
-                        <input type="url" class="form-control @error('image') is-invalid @enderror" id="image" name="image" value="{{ old('image', $product->image) }}" placeholder="https://example.com/image.jpg">
+                        <label for="image" class="form-label">Product Image</label>
+                        <input type="file" class="form-control @error('image') is-invalid @enderror" id="image" name="image" accept="image/*">
                         @error('image')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        @if($product->image)
+                            <img id="imagePreview" src="{{ asset($product->image) }}" class="img-fluid rounded" style="max-height:300px; object-fit:cover;">
+                        @else
+                            <img id="imagePreview" src="" class="img-fluid rounded d-none" style="max-height:300px; object-fit:cover;">
+                        @endif
                     </div>
 
                     <div class="d-flex gap-2">
@@ -64,5 +72,15 @@
         </div>
     </div>
 </div>
+<script>
+document.getElementById('image')?.addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    const img = document.getElementById('imagePreview');
+    if (!file) { if(img) { img.classList.add('d-none'); img.src = ''; } return; }
+    const url = URL.createObjectURL(file);
+    img.src = url;
+    img.classList.remove('d-none');
+});
+</script>
 @endsection
 

@@ -70,7 +70,7 @@ class CustomerAuthController extends Controller
                 return redirect()->route('admin.dashboard')->with('success', 'Welcome back, ' . $customer->name . '!');
             }
 
-            return redirect()->route('home')->with('success', 'Welcome back, ' . $customer->name . '!');
+            return redirect()->route('products.index')->with('success', 'Welcome back, ' . $customer->name . '!');
         }
 
         return back()->with('error', 'Invalid email or password.');

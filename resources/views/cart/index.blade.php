@@ -33,7 +33,7 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <td>${{ number_format($item->product->price, 2) }}</td>
+                                    <td>₱{{ number_format($item->product->price, 2) }}</td>
                                     <td>
                                         <form action="{{ route('cart.update', $item) }}" method="POST" class="d-inline">
                                             @csrf
@@ -41,7 +41,7 @@
                                             <input type="number" name="quantity" value="{{ $item->quantity }}" min="1" max="{{ $item->product->stock }}" class="form-control form-control-sm" style="width: 80px; display: inline-block;" onchange="this.form.submit()">
                                         </form>
                                     </td>
-                                    <td>${{ number_format($item->quantity * $item->product->price, 2) }}</td>
+                                    <td>₱{{ number_format($item->quantity * $item->product->price, 2) }}</td>
                                     <td>
                                         <form action="{{ route('cart.remove', $item) }}" method="POST" class="d-inline">
                                             @csrf
@@ -73,7 +73,7 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between mb-3">
                         <span>Subtotal:</span>
-                        <strong>${{ number_format($total, 2) }}</strong>
+                        <strong>₱{{ number_format($total, 2) }}</strong>
                     </div>
                     <div class="d-flex justify-content-between mb-3">
                         <span>Shipping:</span>
@@ -82,7 +82,7 @@
                     <hr>
                     <div class="d-flex justify-content-between mb-3">
                         <span><strong>Total:</strong></span>
-                        <strong class="text-primary">${{ number_format($total, 2) }}</strong>
+                        <strong class="text-primary">₱{{ number_format($total, 2) }}</strong>
                     </div>
                     <a href="{{ route('checkout') }}" class="btn btn-primary w-100">
                         Proceed to Checkout

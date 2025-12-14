@@ -1,91 +1,48 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard | SoulSkin</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-    <style>
-        body {
-            background-color: #F1F3E0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        .dashboard-header {
-            background: #A1BC98;
-            color: white;
-            padding: 2rem 0;
-            margin-bottom: 2rem;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        .stat-card {
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            transition: transform 0.2s, box-shadow 0.2s;
-            border-left: 4px solid;
-        }
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-        .stat-card.products { border-left-color: #A1BC98; }
-        .stat-card.orders { border-left-color: #A1BC98; }
-        .stat-card.customers { border-left-color: #A1BC98; }
-        .stat-card.revenue { border-left-color: #A1BC98; }
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #2c3e50;
-        }
-        .stat-label {
-            color: #7f8c8d;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .action-btn {
-            background: #A1BC98;
-            color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
-            font-weight: 500;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .action-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(161, 188, 152, 0.4);
-            background: #8fa885;
-            color: white;
-        }
-        .product-form-card {
-            background: white;
-            border-radius: 12px;
-            padding: 2rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        .recent-orders-card {
-            background: white;
-            border-radius: 12px;
-            padding: 2rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        .table th {
-            background-color: #f8f9fa;
-            font-weight: 600;
-            color: #495057;
-        }
-        .badge-status {
-            padding: 0.4rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-        }
-    </style>
-</head>
-<body>
-    <!-- Header -->
+@extends('layouts.app')
+
+@section('title', 'Admin Dashboard')
+
+@section('styles')
+<style>
+    :root{
+        --ss-primary: #A1BC98;
+        --ss-background: #F1F3E0;
+        --ss-accent: rgba(161,188,152,0.15);
+    }
+    .dashboard-header {
+        background: var(--ss-primary);
+        color: white;
+        padding: 1.5rem 0.75rem;
+        margin-bottom: 1.75rem;
+        box-shadow: 0 6px 18px var(--ss-accent);
+        border-radius: 8px;
+    }
+    .stat-card {
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 1.25rem 1rem;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+        transition: transform 0.18s ease, box-shadow 0.18s ease;
+        border-left: 6px solid transparent;
+        display: block;
+        min-height: 110px;
+    }
+    .stat-card:hover { transform: translateY(-6px); box-shadow: 0 10px 24px rgba(0,0,0,0.08); }
+    .stat-card.products { border-left-color: var(--ss-primary); }
+    .stat-card.orders { border-left-color: var(--ss-primary); }
+    .stat-card.customers { border-left-color: var(--ss-primary); }
+    .stat-number { font-size: 2.25rem; font-weight: 700; color: #2c3e50; line-height: 1; }
+    .stat-label { color: #7f8c8d; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    .recent-orders-card { background: #ffffff; border-radius: 12px; padding: 1.25rem; box-shadow: 0 8px 26px rgba(0,0,0,0.05); min-height: 260px; }
+    .table th { background-color: #f8f9fa; font-weight: 600; color: #495057; border-top: 0; }
+    .badge-status { padding: 0.35rem 0.75rem; border-radius: 20px; font-size: 0.85rem; }
+    .dashboard-header .btn { background: #ffffff; color: #2c3e50; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); border: none; }
+    .recent-orders-card .btn-outline-primary { color: var(--ss-primary); border-color: var(--ss-primary); }
+    @media (max-width: 767px){ .stat-number { font-size: 1.8rem; } .dashboard-header { padding: 1rem; } }
+</style>
+@endsection
+
+@section('content')
     <div class="dashboard-header">
         <div class="container">
             <div class="d-flex justify-content-between align-items-center">
@@ -94,156 +51,68 @@
                     <p class="mb-0">Welcome, {{ session('customer_name') }}!</p>
                 </div>
                 <div>
-                    <a href="{{ route('home') }}" class="btn btn-light">
-                        <i class="bi bi-house"></i> Back to Storefront
-                    </a>
+                    <form action="{{ route('logout') }}" method="POST" class="d-inline">
+                        @csrf
+                        <button type="submit" class="btn btn-light">
+                            <i class="bi bi-box-arrow-right"></i> Logout
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="container">
-        <!-- Stats Cards -->
         <div class="row g-4 mb-4">
             <div class="col-md-3">
-                <div class="stat-card products">
-                    <div class="d-flex align-items-center">
-                        <div class="me-3">
-                            <i class="bi bi-box-seam" style="font-size: 2.5rem; color: #A1BC98;"></i>
-                        </div>
-                        <div>
-                            <div class="stat-number">{{ $totalProducts }}</div>
-                            <div class="stat-label">Total Products</div>
+                <a href="{{ route('admin.products.index') }}" class="text-decoration-none">
+                    <div class="stat-card products">
+                        <div class="d-flex align-items-center">
+                            <div class="me-3">
+                                <i class="bi bi-box-seam" style="font-size: 2.5rem; color: var(--ss-primary);"></i>
+                            </div>
+                            <div>
+                                <div class="stat-number">{{ $totalProducts }}</div>
+                                <div class="stat-label">Total Products</div>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </a>
             </div>
             <div class="col-md-3">
-                <div class="stat-card orders">
-                    <div class="d-flex align-items-center">
-                        <div class="me-3">
-                            <i class="bi bi-cart-check" style="font-size: 2.5rem; color: #A1BC98;"></i>
-                        </div>
-                        <div>
-                            <div class="stat-number">{{ $totalOrders }}</div>
-                            <div class="stat-label">Total Orders</div>
+                <a href="{{ route('admin.orders') }}" class="text-decoration-none">
+                    <div class="stat-card orders">
+                        <div class="d-flex align-items-center">
+                            <div class="me-3">
+                                <i class="bi bi-cart-check" style="font-size: 2.5rem; color: var(--ss-primary);"></i>
+                            </div>
+                            <div>
+                                <div class="stat-number">{{ $totalOrders }}</div>
+                                <div class="stat-label">Total Orders</div>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </a>
             </div>
             <div class="col-md-3">
-                <div class="stat-card customers">
-                    <div class="d-flex align-items-center">
-                        <div class="me-3">
-                            <i class="bi bi-people" style="font-size: 2.5rem; color: #A1BC98;"></i>
-                        </div>
-                        <div>
-                            <div class="stat-number">{{ $totalCustomers }}</div>
-                            <div class="stat-label">Total Customers</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="stat-card revenue">
-                    <div class="d-flex align-items-center">
-                        <div class="me-3">
-                            <i class="bi bi-currency-dollar" style="font-size: 2.5rem; color: #A1BC98;"></i>
-                        </div>
-                        <div>
-                            <div class="stat-number">${{ number_format($totalRevenue, 2) }}</div>
-                            <div class="stat-label">Total Revenue</div>
+                <a href="{{ route('admin.customers') }}" class="text-decoration-none">
+                    <div class="stat-card customers">
+                        <div class="d-flex align-items-center">
+                            <div class="me-3">
+                                <i class="bi bi-people" style="font-size: 2.5rem; color: var(--ss-primary);"></i>
+                            </div>
+                            <div>
+                                <div class="stat-number">{{ $totalCustomers }}</div>
+                                <div class="stat-label">Total Customers</div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Quick Action Buttons -->
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="d-flex gap-3 flex-wrap">
-                    <a href="{{ route('admin.products.create') }}" class="action-btn">
-                        <i class="bi bi-plus-circle"></i> Add Product
-                    </a>
-                    <a href="{{ route('admin.orders') }}" class="action-btn">
-                        <i class="bi bi-list-ul"></i> View Orders
-                    </a>
-                    <a href="{{ route('admin.customers') }}" class="action-btn">
-                        <i class="bi bi-people"></i> View Customers
-                    </a>
-                    <a href="{{ route('admin.products.index') }}" class="action-btn">
-                        <i class="bi bi-box-seam"></i> Manage Products
-                    </a>
-                </div>
+                </a>
             </div>
         </div>
 
         <div class="row g-4">
-            <!-- Product Upload Form -->
-            <div class="col-lg-6">
-                <div class="product-form-card">
-                    <h3 class="mb-4"><i class="bi bi-plus-square"></i> Add New Product</h3>
-                    
-                    @if (session('success'))
-                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            {{ session('success') }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        </div>
-                    @endif
-
-                    @if ($errors->any())
-                        <div class="alert alert-danger">
-                            <ul class="mb-0">
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
-
-                    <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data">
-                        @csrf
-                        <div class="mb-3">
-                            <label for="name" class="form-label">Product Name <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="description" class="form-label">Description</label>
-                            <textarea class="form-control" id="description" name="description" rows="3">{{ old('description') }}</textarea>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="price" class="form-label">Price <span class="text-danger">*</span></label>
-                                <div class="input-group">
-                                    <span class="input-group-text">$</span>
-                                    <input type="number" class="form-control" id="price" name="price" step="0.01" min="0" value="{{ old('price') }}" required>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6 mb-3">
-                                <label for="stock" class="form-label">Stock <span class="text-danger">*</span></label>
-                                <input type="number" class="form-control" id="stock" name="stock" min="0" value="{{ old('stock', 0) }}" required>
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="image" class="form-label">Product Image</label>
-                            <input type="file" class="form-control" id="image" name="image" accept="image/*">
-                            <small class="text-muted">Upload an image file (JPG, PNG, etc.)</small>
-                        </div>
-
-                        <button type="submit" class="btn action-btn w-100">
-                            <i class="bi bi-check-circle"></i> Add Product
-                        </button>
-                    </form>
-                </div>
-            </div>
-
-            <!-- Recent Orders Table -->
-            <div class="col-lg-6">
+            <div class="col-lg-12">
                 <div class="recent-orders-card">
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <h3 class="mb-0"><i class="bi bi-clock-history"></i> Recent Orders</h3>
@@ -281,7 +150,7 @@
                                                     {{ ucfirst($order->status) }}
                                                 </span>
                                             </td>
-                                            <td><strong>${{ number_format($order->total_amount, 2) }}</strong></td>
+                                            <td><strong>₱{{ number_format($order->total_amount, 2) }}</strong></td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -297,7 +166,4 @@
             </div>
         </div>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+@endsection

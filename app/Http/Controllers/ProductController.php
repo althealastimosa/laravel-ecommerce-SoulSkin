@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -30,21 +31,21 @@ class ProductController extends Controller
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
         $data = $request->except('image');
 
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $imageName = time() . '_' . $image->getClientOriginalName();
-            $image->storeAs('public/products', $imageName);
-            $data['image'] = '/storage/products/' . $imageName;
+            // store on the public disk and use Storage::url() for consistency
+            $path = $image->store('public/products');
+            $data['image'] = Storage::url($path);
         }
 
-        Product::create($data);
+        $product = Product::create($data);
 
-        return redirect()->route('products.index')
+        return redirect()->route('products.show', $product)
             ->with('success', 'Product created successfully.');
     }
 
@@ -72,21 +73,23 @@ class ProductController extends Controller
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
         $data = $request->except('image');
 
         if ($request->hasFile('image')) {
-            
-            if ($product->image && file_exists(public_path($product->image))) {
-                unlink(public_path($product->image));
+            // remove existing file if present
+            if ($product->image) {
+                $existing = public_path(ltrim($product->image, '/'));
+                if (file_exists($existing)) {
+                    @unlink($existing);
+                }
             }
-            
+
             $image = $request->file('image');
-            $imageName = time() . '_' . $image->getClientOriginalName();
-            $image->storeAs('public/products', $imageName);
-            $data['image'] = '/storage/products/' . $imageName;
+            $path = $image->store('public/products');
+            $data['image'] = Storage::url($path);
         }
 
         $product->update($data);
