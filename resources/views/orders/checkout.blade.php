@@ -3,47 +3,50 @@
 @section('title', 'Checkout - SoulSkin')
 
 @section('content')
-<h1 class="mb-4">Checkout</h1>
+<div class="checkout-page-container">
+    <h1 class="mb-5 checkout-title">Checkout</h1>
 
-<div class="row">
-    <div class="col-md-8">
+    <div class="row g-4">
+        <div class="col-lg-9">
         <div class="card mb-4">
             <div class="card-header">
                 <h5>Order Summary</h5>
             </div>
             <div class="card-body">
-                <table class="table">
+                <table class="table checkout-table-horizontal">
                     <thead>
                         <tr>
-                            <th>Product</th>
-                            <th>Quantity</th>
-                            <th>Price</th>
-                            <th>Subtotal</th>
+                            <th class="checkout-th-product">Product</th>
+                            <th class="checkout-th-qty">Quantity</th>
+                            <th class="checkout-th-price">Price</th>
+                            <th class="checkout-th-subtotal">Subtotal</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($cartItems as $item)
                             <tr>
-                                <td>
+                                <td class="checkout-td-product">
                                     <div class="d-flex align-items-center">
-                                        @if($item->product->image)
-                                            <img src="{{ $item->product->image }}" alt="{{ $item->product->name }}" class="me-3" style="width: 50px; height: 50px; object-fit: cover;">
+                                        @if($item->product->hasImage() && $item->product->image_url)
+                                            <img src="{{ $item->product->image_url }}" alt="{{ $item->product->name }}" class="checkout-img">
+                                        @else
+                                            <div class="checkout-img-placeholder">
+                                                <i class="bi bi-image"></i>
+                                            </div>
                                         @endif
-                                        <div>
-                                            <strong>{{ $item->product->name }}</strong>
-                                        </div>
+                                        <span class="checkout-product-text">{{ $item->product->name }}</span>
                                     </div>
                                 </td>
-                                <td>{{ $item->quantity }}</td>
-                                <td>₱{{ number_format($item->product->price, 2) }}</td>
-                                <td>₱{{ number_format($item->quantity * $item->product->price, 2) }}</td>
+                                <td class="checkout-td-qty">{{ $item->quantity }}</td>
+                                <td class="checkout-td-price">₱{{ number_format($item->product->price, 2) }}</td>
+                                <td class="checkout-td-subtotal">₱{{ number_format($item->quantity * $item->product->price, 2) }}</td>
                             </tr>
                         @endforeach
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th colspan="3" class="text-end">Total:</th>
-                            <th class="text-primary">₱{{ number_format($total, 2) }}</th>
+                            <td colspan="3" class="checkout-total-label-cell">Total:</td>
+                            <td class="checkout-total-amount-cell">₱{{ number_format($total, 2) }}</td>
                         </tr>
                     </tfoot>
                 </table>
@@ -90,25 +93,26 @@
                 </form>
             </div>
         </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-header">
-                <h5>Order Total</h5>
-            </div>
-            <div class="card-body">
-                <div class="d-flex justify-content-between mb-2">
-                    <span>Subtotal:</span>
-                    <strong>₱{{ number_format($total, 2) }}</strong>
+        </div>
+        <div class="col-lg-3">
+            <div class="card checkout-total-card">
+                <div class="card-header">
+                    <h5>Order Total</h5>
                 </div>
-                <div class="d-flex justify-content-between mb-2">
-                    <span>Shipping:</span>
-                    <strong>Free</strong>
-                </div>
-                <hr>
-                <div class="d-flex justify-content-between">
-                    <span><strong>Total:</strong></span>
-                    <strong class="text-primary">₱{{ number_format($total, 2) }}</strong>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-3">
+                        <span class="checkout-summary-label">Subtotal:</span>
+                        <strong class="checkout-summary-value">₱{{ number_format($total, 2) }}</strong>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3">
+                        <span class="checkout-summary-label">Shipping:</span>
+                        <strong class="checkout-summary-value text-success">Free</strong>
+                    </div>
+                    <hr class="my-3">
+                    <div class="d-flex justify-content-between">
+                        <span class="checkout-total-label-text"><strong>Total:</strong></span>
+                        <strong class="checkout-total-value">₱{{ number_format($total, 2) }}</strong>
+                    </div>
                 </div>
             </div>
         </div>

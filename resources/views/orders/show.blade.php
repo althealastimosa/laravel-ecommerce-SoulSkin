@@ -3,52 +3,55 @@
 @section('title', 'Order Details - SoulSkin')
 
 @section('content')
-<div class="row">
-    <div class="col-md-8">
-        <div class="card mb-4">
-            <div class="card-header">
-                <h3>Order Details - {{ $order->order_number }}</h3>
-            </div>
-            <div class="card-body">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Product</th>
-                            <th>Quantity</th>
-                            <th>Price</th>
-                            <th>Subtotal</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($order->orderItems as $item)
+<div class="order-details-page-container">
+    <div class="row g-4">
+        <div class="col-lg-9">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3>Order Details - {{ $order->order_number }}</h3>
+                </div>
+                <div class="card-body">
+                    <table class="table order-details-table-horizontal">
+                        <thead>
                             <tr>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        @if($item->product->image)
-                                            <img src="{{ $item->product->image }}" alt="{{ $item->product->name }}" class="me-3" style="width: 50px; height: 50px; object-fit: cover;">
-                                        @endif
-                                        <div>
-                                            <strong>{{ $item->product->name }}</strong>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>{{ $item->quantity }}</td>
-                                <td>₱{{ number_format($item->price, 2) }}</td>
-                                <td>₱{{ number_format($item->subtotal, 2) }}</td>
+                                <th class="order-details-th-product">Product</th>
+                                <th class="order-details-th-qty">Quantity</th>
+                                <th class="order-details-th-price">Price</th>
+                                <th class="order-details-th-subtotal">Subtotal</th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <th colspan="3" class="text-end">Total:</th>
-                            <th class="text-primary">₱{{ number_format($order->total_amount, 2) }}</th>
-                        </tr>
-                    </tfoot>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach($order->orderItems as $item)
+                                <tr>
+                                    <td class="order-details-td-product">
+                                        <div class="d-flex align-items-center">
+                                            @if($item->product->hasImage() && $item->product->image_url)
+                                                <img src="{{ $item->product->image_url }}" alt="{{ $item->product->name }}" class="order-details-img">
+                                            @else
+                                                <div class="order-details-img-placeholder">
+                                                    <i class="bi bi-image"></i>
+                                                </div>
+                                            @endif
+                                            <span class="order-details-product-text">{{ $item->product->name }}</span>
+                                        </div>
+                                    </td>
+                                    <td class="order-details-td-qty">{{ $item->quantity }}</td>
+                                    <td class="order-details-td-price">₱{{ number_format($item->price, 2) }}</td>
+                                    <td class="order-details-td-subtotal">₱{{ number_format($item->subtotal, 2) }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3" class="order-details-total-label-cell">Total:</td>
+                                <td class="order-details-total-amount-cell">₱{{ number_format($order->total_amount, 2) }}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="col-md-4">
+        <div class="col-lg-3">
         <div class="card mb-4">
             <div class="card-header">
                 <h5>Order Information</h5>
@@ -84,10 +87,11 @@
                 @endif
             </div>
         </div>
+        </div>
     </div>
 </div>
 
-<div class="mt-3">
+<div class="mt-3 order-details-page-container">
     <a href="{{ route('orders.index') }}" class="btn btn-secondary">Back to Orders</a>
 </div>
 @endsection

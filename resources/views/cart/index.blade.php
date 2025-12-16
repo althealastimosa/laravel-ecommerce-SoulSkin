@@ -19,7 +19,7 @@
 
     @if($cartItems->count() > 0)
         <div class="row g-4">
-            <div class="col-lg-8">
+            <div class="col-lg-9">
                 <div class="card">
                     <div class="card-body p-4">
                         <div class="cart-items">
@@ -72,7 +72,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4">
+            <div class="col-lg-3">
                 <div class="card cart-summary-card">
                     <div class="card-header bg-primary text-white">
                         <h5 class="mb-0"><i class="bi bi-receipt"></i> Order Summary</h5>
