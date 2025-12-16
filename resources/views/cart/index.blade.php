@@ -24,53 +24,46 @@
                     <div class="card-body p-4">
                         <div class="cart-items">
                             @foreach($cartItems as $item)
-                                <div class="cart-item mb-4 pb-4 border-bottom">
-                                    <div class="row align-items-center g-3">
-                                        <div class="col-12 col-lg-4">
-                                            <div class="d-flex align-items-center">
-                                                @if($item->product->hasImage() && $item->product->image_url)
-                                                    <img src="{{ $item->product->image_url }}" alt="{{ $item->product->name }}" class="cart-item-image me-3">
-                                                @else
-                                                    <div class="cart-item-image-placeholder me-3">
-                                                        <i class="bi bi-image"></i>
-                                                    </div>
-                                                @endif
-                                                <div class="flex-grow-1">
-                                                    <h6 class="mb-1 fw-bold">{{ $item->product->name }}</h6>
-                                                    <p class="text-muted mb-0 small">{{ Str::limit($item->product->description, 50) }}</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-6 col-lg-2 text-lg-center">
-                                            <div class="cart-item-price">
-                                                <span class="text-muted small d-block d-lg-none mb-1">Price</span>
-                                                <strong class="price-value">₱{{ number_format($item->product->price, 2) }}</strong>
-                                            </div>
-                                        </div>
-                                        <div class="col-6 col-lg-2 text-lg-center">
-                                            <div class="cart-item-quantity">
-                                                <span class="text-muted small d-block d-lg-none mb-2">Quantity</span>
-                                                <form action="{{ route('cart.update', $item) }}" method="POST" class="d-inline">
-                                                    @csrf
-                                                    @method('PUT')
-                                                    <input type="number" name="quantity" value="{{ $item->quantity }}" min="1" max="{{ $item->product->stock }}" class="form-control cart-quantity-input" onchange="this.form.submit()">
-                                                </form>
-                                            </div>
-                                        </div>
-                                        <div class="col-6 col-lg-3 text-lg-center">
-                                            <div class="cart-item-subtotal">
-                                                <span class="text-muted small d-block d-lg-none mb-1">Subtotal</span>
-                                                <strong class="text-primary price-value">₱{{ number_format($item->quantity * $item->product->price, 2) }}</strong>
-                                            </div>
-                                        </div>
-                                        <div class="col-6 col-lg-1 text-lg-center">
+                                <div class="cart-item-row">
+                                    <div class="cart-item-content">
+                                        <div class="cart-item-delete-btn-wrapper">
                                             <form action="{{ route('cart.remove', $item) }}" method="POST" class="d-inline">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-link text-danger p-0" title="Remove item">
-                                                    <i class="bi bi-x-circle fs-5"></i>
+                                                <button type="submit" class="btn-delete-cart-item" title="Remove item" onclick="return confirm('Are you sure you want to remove this item?');">
+                                                    <i class="bi bi-x-lg"></i>
                                                 </button>
                                             </form>
+                                        </div>
+                                        <div class="cart-item-image-section">
+                                            @if($item->product->hasImage() && $item->product->image_url)
+                                                <img src="{{ $item->product->image_url }}" alt="{{ $item->product->name }}" class="cart-item-image">
+                                            @else
+                                                <div class="cart-item-image-placeholder">
+                                                    <i class="bi bi-image"></i>
+                                                </div>
+                                            @endif
+                                        </div>
+                                        <div class="cart-item-info-section">
+                                            <h6 class="cart-product-name">{{ $item->product->name }}</h6>
+                                            <p class="cart-product-description">{{ Str::limit($item->product->description, 100) }}</p>
+                                            <div class="cart-item-unit-price">
+                                                <span class="unit-price-label">Price:</span>
+                                                <strong class="unit-price-value">₱{{ number_format($item->product->price, 2) }}</strong>
+                                            </div>
+                                        </div>
+                                        <div class="cart-item-quantity-section">
+                                            <form action="{{ route('cart.update', $item) }}" method="POST">
+                                                @csrf
+                                                @method('PUT')
+                                                <label class="quantity-label">Quantity</label>
+                                                <input type="number" name="quantity" value="{{ $item->quantity }}" min="1" max="{{ $item->product->stock }}" class="cart-quantity-input" onchange="this.form.submit()">
+                                            </form>
+                                        </div>
+                                        <div class="cart-item-total-section">
+                                            <div class="cart-item-total">
+                                                <strong class="total-price">₱{{ number_format($item->quantity * $item->product->price, 2) }}</strong>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

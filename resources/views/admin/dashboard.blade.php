@@ -54,19 +54,9 @@
 @section('content')
     <div class="dashboard-header">
         <div class="container">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <h1 class="mb-1"><i class="bi bi-speedometer2"></i> Admin Dashboard</h1>
-                    <p class="mb-0">Welcome, {{ session('customer_name') }}!</p>
-                </div>
-                <div>
-                    <form action="{{ route('logout') }}" method="POST" class="d-inline">
-                        @csrf
-                        <button type="submit" class="btn btn-light">
-                            <i class="bi bi-box-arrow-right"></i> Logout
-                        </button>
-                    </form>
-                </div>
+            <div>
+                <h1 class="mb-1"><i class="bi bi-speedometer2"></i> Admin Dashboard</h1>
+                <p class="mb-0">Welcome, {{ session('customer_name') }}!</p>
             </div>
         </div>
     </div>
